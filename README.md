@@ -43,7 +43,7 @@ Next, pick the workspace where you want to install the Wheel of Blame.
 
 Then, in the "Enter app manifest below" step, copy & paste the contents of one of the two app manifest files in the `slack-assets` folder.
 
-- `app-manifest.conservative.yml` only allow the bot to participate in _public_ channels (where it's been invited) and in 1:1 DMs (which only makes sense for testing; you can DM the bot "not my fault" to check if it's up and running).
+- `app-manifest.conservative.yml` only allows the bot to participate in _public_ channels (where it's been invited) and in 1:1 DMs (which only makes sense for testing; you can DM the bot "not my fault" to check if it's up and running).
 - `app-manifest.exhaustive.yml` also allows the bot to work in _private_ channels (where it's been invited) and in group DMs (that include it).
 
 Click **Next** and **Create**.
@@ -76,7 +76,7 @@ and all that's left now is to tell you where to find those secrets.
 
 - `WOB_TOKEN` is on the **Install App** page where it's called **Bot User OAuth Token**.
 - `WOB_SIGNING_SECRET` is on the **Basic Information** page in the **App Credentials** section. It's called **Signing Secret**. Click "Show" to see and copy it.
-- `WOB_APP_TOKEN` is on the **Basic Information** page as well. Under **App-Level Tokens** you'll find the token we created for the websocket connect. Click the token name and you'll see the value.
+- `WOB_APP_TOKEN` is on the **Basic Information** page as well. Under **App-Level Tokens** you'll find the token we created for the websocket connection. Click the token name and you'll see the value.
 
 With that, you can start the code as shown above! If all is well, it'll say `running as 12345` (where the number is the process id) and then just sit there and wait for messages.
 
