@@ -24,22 +24,20 @@ app.message(
       ).members ?? [];
 
     let blamee: User | undefined = undefined;
-    if (channelMembers.length) {
-      const remainingCandidates = [...channelMembers];
-      while (remainingCandidates.length) {
-        const index = (Math.random() * remainingCandidates.length) | 0;
-        const candidateId = remainingCandidates.splice(index, 1)[0];
-        if (candidateId === notMyFaultMessage.user) {
-          // don't blame the user who said "not my fault"
-          continue;
-        }
-        const candidateInfo = await app.client.users.info({
-          user: candidateId,
-        });
-        if (candidateInfo.user && isLegalBlamee(candidateInfo.user)) {
-          blamee = candidateInfo.user;
-          break;
-        }
+    const remainingCandidates = [...channelMembers];
+    while (remainingCandidates.length) {
+      const index = (Math.random() * remainingCandidates.length) | 0;
+      const candidateId = remainingCandidates.splice(index, 1)[0];
+      if (candidateId === notMyFaultMessage.user) {
+        // don't blame the user who said "not my fault"
+        continue;
+      }
+      const candidateInfo = await app.client.users.info({
+        user: candidateId,
+      });
+      if (candidateInfo.user && isLegalBlamee(candidateInfo.user)) {
+        blamee = candidateInfo.user;
+        break;
       }
     }
 
