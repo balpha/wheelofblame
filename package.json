@@ -8,8 +8,10 @@
   },
   "dependencies": {
     "@slack/bolt": "^3.11.0",
-    "@slack/socket-mode": "^1.3.0-rc.1",
     "ts-node": "^10.7.0",
     "typescript": "^4.6.3"
+  },
+  "resolutions": {
+    "@slack/socket-mode": "^1.3.0-rc.1"
   }
 }
