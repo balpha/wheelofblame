@@ -70,6 +70,22 @@
     p-queue "^2.4.2"
     ws "^7.5.3"
 
+"@slack/socket-mode@^1.3.0-rc.1":
+  version "1.3.0-rc.1"
+  resolved "https://registry.yarnpkg.com/@slack/socket-mode/-/socket-mode-1.3.0-rc.1.tgz#f804e3be449737da3ad5b3ce80410d528ad91e22"
+  integrity sha512-49SqrI/BcpQ//ZkOLopfDCcwffvyeh4zdarWNB70e6eR2HVpWcW0vxmXJcSIRQ7p0X4GgGgA8E8gVOK2oGipwA==
+  dependencies:
+    "@slack/logger" "^3.0.0"
+    "@slack/web-api" "^6.2.3"
+    "@types/node" ">=12.0.0"
+    "@types/p-queue" "^2.3.2"
+    "@types/ws" "^7.4.7"
+    eventemitter3 "^3.1.0"
+    finity "^0.5.4"
+    p-cancelable "^1.1.0"
+    p-queue "^2.4.2"
+    ws "^7.5.3"
+
 "@slack/types@^2.0.0", "@slack/types@^2.4.0":
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/@slack/types/-/types-2.4.0.tgz#b6f6d50e9181f723080b841302e089739cef512d"
