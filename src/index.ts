@@ -1,4 +1,10 @@
-import { App, SayArguments, SayFn } from "@slack/bolt";
+import {
+  App,
+  ImageElement,
+  PlainTextElement,
+  SayArguments,
+  SayFn,
+} from "@slack/bolt";
 import { Profile, User } from "@slack/web-api/dist/response/UsersInfoResponse";
 
 const app = new App({
@@ -73,7 +79,9 @@ app.message(
       await wait(1500);
       updateBlameMessage(":bulb:");
       await wait(1500);
-      updateBlameMessage(buildFinalBlameMessage(blamee.profile));
+      updateBlameMessage(buildFinalBlameMessage(blamee.profile, "drumroll"));
+      await wait(2500);
+      updateBlameMessage(buildFinalBlameMessage(blamee.profile, "reveal"));
     } else {
       await say(`Of course it is your fault.`);
     }
@@ -132,18 +140,38 @@ function editableMessagePoster(say: SayFn) {
   };
 }
 
-function buildFinalBlameMessage(blameeProfile: Profile): SayArguments {
+function buildFinalBlameMessage(
+  blameeProfile: Profile,
+  phase: "drumroll" | "reveal"
+): SayArguments {
   const name = blameeProfile.display_name || blameeProfile.real_name || "";
   const possessive = /s$/.test(name) ? `${name}'` : `${name}'s`;
+  const text =
+    phase === "drumroll"
+      ? "It's … :drum_with_drumsticks:"
+      : `It's ${possessive} fault!`;
 
   if (blameeProfile.image_48) {
+    const blameeBlock: PlainTextElement | ImageElement =
+      phase === "drumroll"
+        ? {
+            type: "plain_text",
+            emoji: true,
+            text: ":question:",
+          }
+        : {
+            type: "image",
+            image_url: blameeProfile.image_48,
+            alt_text: "avatar",
+          };
+
     return {
       blocks: [
         {
           type: "header",
           text: {
             type: "plain_text",
-            text: `It's ${possessive} fault!`,
+            text,
           },
         },
         {
@@ -154,11 +182,7 @@ function buildFinalBlameMessage(blameeProfile: Profile): SayArguments {
               emoji: true,
               text: ":point_right::point_right:",
             },
-            {
-              type: "image",
-              image_url: blameeProfile.image_48,
-              alt_text: "avatar",
-            },
+            blameeBlock,
             {
               type: "plain_text",
               text: " ",
@@ -171,11 +195,11 @@ function buildFinalBlameMessage(blameeProfile: Profile): SayArguments {
           ],
         },
       ],
-      text: `It's ${possessive} fault!`,
+      text,
     };
   } else {
     return {
-      text: `*It's ${possessive} fault!*`,
+      text: `*${text}*`,
       mrkdwn: true,
     };
   }
