@@ -14,6 +14,8 @@ const app = new App({
   appToken: process.env.WOB_APP_TOKEN,
 });
 
+const recentlyHandledMessageIds: string[] = [];
+
 app.message(
   /^\s*not my fault\s*$/i,
   async ({ message: notMyFaultMessage, say }) => {
@@ -21,6 +23,15 @@ app.message(
     if (notMyFaultMessage.subtype) {
       return;
     }
+
+    // in case of reconnecting, the client will sometime receive the same message twice
+    if (recentlyHandledMessageIds.includes(notMyFaultMessage.ts)) {
+      console.log(`ignoring duplicate message ${notMyFaultMessage.ts}`);
+      return;
+    }
+
+    recentlyHandledMessageIds.unshift(notMyFaultMessage.ts);
+    recentlyHandledMessageIds.splice(20, 1);
 
     const channelMembers =
       (
