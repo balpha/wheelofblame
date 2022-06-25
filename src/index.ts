@@ -52,7 +52,7 @@ app.message(
     if (blamee && blamee.profile) {
       const postEditableMessage = editableMessagePoster(say);
 
-      const updateBlameMessage = await postEditableMessage({
+      const updateBlameMessagePromise = postEditableMessage({
         // If "not my fault" was said in a thread, respond in that thread.
         thread_ts: notMyFaultMessage.thread_ts,
         blocks: [
@@ -64,23 +64,24 @@ app.message(
         text: ":thinking_face:",
       });
 
+      const updateBlameMessage = await takeAtLeast(
+        1500,
+        updateBlameMessagePromise
+      );
+
       if (!updateBlameMessage) {
         return;
       }
 
-      await wait(1500);
-      updateBlameMessage(":grin:");
-      await wait(1500);
-      updateBlameMessage(":point_left:");
-      await wait(1500);
-      updateBlameMessage(":point_right:");
-      await wait(1500);
-      updateBlameMessage(":point_left:");
-      await wait(1500);
-      updateBlameMessage(":bulb:");
-      await wait(1500);
-      updateBlameMessage(buildFinalBlameMessage(blamee.profile, "drumroll"));
-      await wait(2500);
+      await takeAtLeast(1500, updateBlameMessage(":grin:"));
+      await takeAtLeast(1500, updateBlameMessage(":point_left:"));
+      await takeAtLeast(1500, updateBlameMessage(":point_right:"));
+      await takeAtLeast(1500, updateBlameMessage(":point_left:"));
+      await takeAtLeast(1500, updateBlameMessage(":bulb:"));
+      await takeAtLeast(
+        2500,
+        updateBlameMessage(buildFinalBlameMessage(blamee.profile, "drumroll"))
+      );
       updateBlameMessage(buildFinalBlameMessage(blamee.profile, "reveal"));
     } else {
       await say(`Of course it is your fault.`);
@@ -93,10 +94,14 @@ app.message(
   console.log(`running as ${process.pid}`);
 })();
 
-function wait(ms: number): Promise<void> {
-  return new Promise((resolve) => {
+/** Resolves to the same result as the passed-in promise, but guarantees to take
+ * at least the given number of milliseconds before resolving.
+ */
+function takeAtLeast<T>(ms: number, promise: Promise<T>): Promise<T> {
+  const timePromise = new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
+  return Promise.all([promise, timePromise]).then(([result, _]) => result);
 }
 
 function isLegalBlamee(user: User) {
