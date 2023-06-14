@@ -60,7 +60,7 @@ app.message(
 
     console.log(blamee);
 
-    if (blamee && blamee.profile) {
+    if (blamee && hasProfile(blamee)) {
       const postEditableMessage = editableMessagePoster(say);
 
       const updateBlameMessagePromise = postEditableMessage({
@@ -91,9 +91,9 @@ app.message(
       await takeAtLeast(1500, updateBlameMessage(":bulb:"));
       await takeAtLeast(
         2500,
-        updateBlameMessage(buildFinalBlameMessage(blamee.profile, "drumroll"))
+        updateBlameMessage(buildFinalBlameMessage(blamee, "drumroll"))
       );
-      updateBlameMessage(buildFinalBlameMessage(blamee.profile, "reveal"));
+      updateBlameMessage(buildFinalBlameMessage(blamee, "reveal"));
     } else {
       await say(`Of course it is your fault.`);
     }
@@ -117,6 +117,10 @@ function takeAtLeast<T>(ms: number, promise: Promise<T>): Promise<T> {
 
 function isLegalBlamee(user: User) {
   return !(user.is_bot || user.deleted);
+}
+
+function hasProfile(user: User): user is { profile: Profile } {
+  return !!user.profile;
 }
 
 // Takes the original say function and returns a modified version
@@ -157,15 +161,17 @@ function editableMessagePoster(say: SayFn) {
 }
 
 function buildFinalBlameMessage(
-  blameeProfile: Profile,
+  blamee: User & { profile: Profile },
   phase: "drumroll" | "reveal"
 ): SayArguments {
+  const blameeProfile = blamee.profile;
   const name = blameeProfile.display_name || blameeProfile.real_name || "";
-  const possessive = /s$/.test(name) ? `${name}'` : `${name}'s`;
+  const mention = `<@${blamee.id}>`;
+  const possessiveMention = /s$/.test(name) ? `${mention}'` : `${mention}'s`;
   const text =
     phase === "drumroll"
-      ? "It's … :drum_with_drumsticks:"
-      : `It's ${possessive} fault!`;
+      ? "*It's … :drum_with_drumsticks:*"
+      : `*It's ${possessiveMention} fault!*`;
 
   if (blameeProfile.image_48) {
     const blameeBlock: PlainTextElement | ImageElement =
@@ -184,11 +190,13 @@ function buildFinalBlameMessage(
     return {
       blocks: [
         {
-          type: "header",
-          text: {
-            type: "plain_text",
-            text,
-          },
+          type: "section",
+          fields: [
+            {
+              type: "mrkdwn",
+              text,
+            },
+          ],
         },
         {
           type: "context",
