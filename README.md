@@ -80,6 +80,15 @@ and all that's left now is to tell you where to find those secrets.
 
 With that, you can start the code as shown above! If all is well, it'll say `running as 12345` (where the number is the process id) and then just sit there and wait for messages.
 
+### Using docker
+
+Alternatively, you can build (and run) a docker image by referencing this repository directly, like this:
+
+```
+docker build https://github.com/balpha/wheelofblame.git -t wheelofblame
+docker run -e WOB_TOKEN=XXX WOB_APP_TOKEN=XXX WOB_SIGNING_SECRET=XXX wheelofblame
+```
+
 ### Adding the bot to channels
 
 First, you might want to send a direct message to the bot, to check that it's running. Say "not my fault" (it doesn't respond to anything else). If it replies with "Of course it is your fault.", all is well!
