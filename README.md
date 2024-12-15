@@ -86,7 +86,7 @@ Alternatively, you can build (and run) a docker image by referencing this reposi
 
 ```
 docker build https://github.com/balpha/wheelofblame.git -t wheelofblame
-docker run -e WOB_TOKEN=XXX WOB_APP_TOKEN=XXX WOB_SIGNING_SECRET=XXX wheelofblame
+docker run -e WOB_TOKEN=XXX -e WOB_APP_TOKEN=XXX -e WOB_SIGNING_SECRET=XXX wheelofblame
 ```
 
 ### Adding the bot to channels
