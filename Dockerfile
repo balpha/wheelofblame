@@ -1,4 +1,5 @@
-FROM node:20-alpine
+FROM node:current-alpine
+RUN apk add yarn
 
 WORKDIR /app
 COPY LICENSE.txt .

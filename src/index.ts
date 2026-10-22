@@ -77,7 +77,7 @@ app.message(
 
       const updateBlameMessage = await takeAtLeast(
         1500,
-        updateBlameMessagePromise
+        updateBlameMessagePromise,
       );
 
       if (!updateBlameMessage) {
@@ -91,13 +91,13 @@ app.message(
       await takeAtLeast(1500, updateBlameMessage(":bulb:"));
       await takeAtLeast(
         2500,
-        updateBlameMessage(buildFinalBlameMessage(blamee, "drumroll"))
+        updateBlameMessage(buildFinalBlameMessage(blamee, "drumroll")),
       );
       updateBlameMessage(buildFinalBlameMessage(blamee, "reveal"));
     } else {
       await say(`Of course it is your fault.`);
     }
-  }
+  },
 );
 
 (async () => {
@@ -138,7 +138,7 @@ function editableMessagePoster(say: SayFn) {
     }
 
     // ... and return a function that updates it
-    const updateMessage: SayFn = async (sayArg) => {
+    const updateMessage = async (sayArg: string | SayArguments) => {
       if (typeof sayArg === "string") {
         return app.client.chat.update({
           channel: postedMessageChannel,
@@ -162,7 +162,7 @@ function editableMessagePoster(say: SayFn) {
 
 function buildFinalBlameMessage(
   blamee: User & { profile: Profile },
-  phase: "drumroll" | "reveal"
+  phase: "drumroll" | "reveal",
 ): SayArguments {
   const blameeProfile = blamee.profile;
   const name = blameeProfile.display_name || blameeProfile.real_name || "";
